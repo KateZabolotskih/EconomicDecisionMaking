@@ -42,3 +42,11 @@ sample3 = get_sample(matrix, [col1, col2, col3], n3, marker=1, p=p, start_from=2
 n4 = 10
 sample4 = get_sample(matrix, [col1, col2, col3], n4, marker=2, p=p, start_from=20)
 BC.plot_data(sample3, sample4)
+
+print('P_21 = ' + str(BC.P_21) + '\n'
+      'P_12 = ' + str(BC.P_12) + '\n'
+      'q1 = ' + str(BC.q1) + '\n'
+      'q2 = ' + str(BC.q2) + '\n'
+      'D = ' + str(BC.D) + '\n'
+      'DH = ' + str(BC.DH) + '\n')
+
