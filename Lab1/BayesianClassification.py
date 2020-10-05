@@ -92,15 +92,15 @@ class BayesianClassification:
         for i in range(n_1):
             x = sample_1[:, i]
             if self.classify(x) == 1:
-                ax.scatter(x[0], x[1], x[2], c='g', marker='+')
+                ax.scatter(x[0], x[1], x[2], c='teal', marker='+')
             else:
-                ax.scatter(x[0], x[1], x[2], c='g', marker='o')
+                ax.scatter(x[0], x[1], x[2], c='teal', marker='o')
         for i in range(n_2):
             x = sample_2[:, i]
             if self.classify(x) == 1:
-                ax.scatter(x[0], x[1], x[2], c='purple', marker='*')
+                ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='*')
             else:
-                ax.scatter(x[0], x[1], x[2], c='purple', marker='x')
+                ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='^')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
