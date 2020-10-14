@@ -128,12 +128,9 @@ class BayesianClassification:
         self.P_21 = F((K - self.DH / 2) / sqrt(self.D))
 
     def culc_mahalanobis_distance(self, p=3):
-        sample = np.concatenate((self.sample1, self.sample2), axis=1)
-        means = np.array([np.mean(row) for row in sample])
+        _sum = (self.a.dot(self.cov_matrix)).dot(self.a)
 
-        sum = (self.a.dot(self.cov_matrix)).dot(self.a)
-
-        self.D = (self.z1 - self.z2) * (self.z1 - self.z2) / (sum * sum)
+        self.D = (self.z1 - self.z2) * (self.z1 - self.z2) / (_sum * _sum)
         self.DH = fabs((self.n1 + self.n2 - p - 3) / (self.n1 + self.n2 - 2) * self.D - p * (1 / self.n1 + 1 / self.n2))
 
 
