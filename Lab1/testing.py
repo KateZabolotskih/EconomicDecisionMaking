@@ -8,9 +8,9 @@ if not os.path.exists(data_path):
     exit(1)
 
 p = 3
-col1 = 2
-col2 = 3
-col3 = 8
+col1 = 0
+col2 = 2
+col3 = 9
 
 matrix = np.loadtxt(data_path)
 

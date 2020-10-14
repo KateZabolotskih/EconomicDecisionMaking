@@ -55,17 +55,11 @@ class BayesianClassification:
         self.z1 /= self.n1
         self.z2 /= self.n2
 
-        self.c = (self.z1 + self.z2) / 2
+        self.q1 = self.n1 / (self.n1 + self.n2)
+        self.q2 = self.n2 / (self.n1 + self.n2)
 
-        self.q1, self.q2 = 0, 0
-        for i in range(self.n1):
-            x = sample1[:, i]
-            if self.classify(x, is_q_set=False) == 0:
-                self.q1 += 1
-        for i in range(self.n2):
-            x = sample2[:, i]
-            if self.classify(x, is_q_set=False) == 1:
-                self.q2 += 1
+        self.c = (self.z1 + self.z2) / 2 + log(self.q1 / self.q2)
+
         self.D = 0
         self.DH = 0
         self.culc_mahalanobis_distance()
@@ -91,9 +85,11 @@ class BayesianClassification:
         n_1 = len(sample_1[0])
         n_2 = len(sample_2[0])
 
-        x = np.linspace(x_min, x_max, 10)
-        y = np.linspace(y_min, y_max, 10)
+        x = np.linspace(x_min, x_max, 4)
+        y = np.linspace(y_min, y_max, 4)
         X, Y = np.meshgrid(x, y)
+        f = lambda _x, _y: ((- self.a[0] * _x - self.a[1] * _y) + np.full(_x.shape, self.c)) / self.a[2]
+        Z = f(X, Y)
 
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d')
@@ -114,8 +110,6 @@ class BayesianClassification:
                 ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='*')
                 q2 += 1
 
-        f = lambda x, y: ((- self.a[0] * x - self.a[1] * y) + np.full(x.shape, self.c + log(self.q2 / self.q1))) / self.a[2]
-        Z = f(X, Y)
 
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -136,13 +130,11 @@ class BayesianClassification:
     def culc_mahalanobis_distance(self, p=3):
         sample = np.concatenate((self.sample1, self.sample2), axis=1)
         means = np.array([np.mean(row) for row in sample])
-        sum = 0
-        for i in range(p):
-            for j in range(p):
-                sum += self.a[i] * s_k_l_j(sample, i, j, self.n1 + self.n2, means) * self.a[j]
+
+        sum = (self.a.dot(self.cov_matrix)).dot(self.a)
 
         self.D = (self.z1 - self.z2) * (self.z1 - self.z2) / (sum * sum)
-        self.DH = (self.n1 + self.n2 - p - 3) / (self.n1 + self.n2 - 2) * self.D - p * (1 / self.n1 + 1 / self.n2)
+        self.DH = fabs((self.n1 + self.n2 - p - 3) / (self.n1 + self.n2 - 2) * self.D - p * (1 / self.n1 + 1 / self.n2))
 
 
 
