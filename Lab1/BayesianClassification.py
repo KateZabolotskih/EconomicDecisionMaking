@@ -31,18 +31,23 @@ class BayesianClassification:
     # initialization of consistent estimates:
     # mean, covariation matrix, z1, z2, q1, q2
     # also counting mahalanobis distance and the probability of erroneous classification
-    def __init__(self, sample1, sample2):
+    def __init__(self, sample1, sample2, mean1 = 0, mean2 = 0, cov = 0):
         self.sample1 = sample1
         self.sample2 = sample2
         self.n1 = len(sample1[0])
         self.n2 = len(sample2[0])
 
-        self.mean1 = np.array([np.mean(row) for row in self.sample1])
-        self.mean2 = np.array([np.mean(row) for row in self.sample2])
+        if (mean1 == 0):
+            self.mean1 = np.array([np.mean(row) for row in self.sample1])
+            self.mean2 = np.array([np.mean(row) for row in self.sample2])
+            self.cov_matrix = covariation_matrix(self.sample1, self.sample2, self.mean1, self.mean2)
+        else:
+            self.mean1 = mean1
+            self.mean2 = mean2
+            self.cov_matrix = cov
 
-        self.cov_matrix = covariation_matrix(self.sample1, self.sample2, self.mean1, self.mean2)
         self.a = np.linalg.inv(self.cov_matrix).dot(self.mean1 - self.mean2)
-
+        print(self.cov_matrix)
         self.z1, self.z2 = 0, 0
         for i in range(self.n1):
             self.z1 += self.a.dot(self.sample1[:, i])
@@ -92,16 +97,16 @@ class BayesianClassification:
         for i in range(n_1):
             x = sample_1[:, i]
             if self._classify(x) == 1:
-                ax.scatter(x[0], x[1], x[2], c='teal', marker='o')
-            else:
                 ax.scatter(x[0], x[1], x[2], c='teal', marker='+')
+            else:
+                ax.scatter(x[0], x[1], x[2], c='teal', marker='o')
 
         for i in range(n_2):
             x = sample_2[:, i]
             if self._classify(x) == 0:
-                ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='^')
-            else:
                 ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='*')
+            else:
+                ax.scatter(x[0], x[1], x[2], c='mediumpurple', marker='^')
 
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
@@ -138,7 +143,7 @@ class BayesianClassification:
     def _culc_mahalanobis_distance(self, p=3):
         _sum = (self.a.dot(self.cov_matrix)).dot(self.a)
 
-        self.D = (self.z1 - self.z2) * (self.z1 - self.z2) / (_sum * _sum)
+        self.D = (self.z1 - self.z2) * (self.z1 - self.z2) / _sum
         self.DH = fabs((self.n1 + self.n2 - p - 3) / (self.n1 + self.n2 - 2) * self.D - p * (1 / self.n1 + 1 / self.n2))
 
 
