@@ -2,11 +2,11 @@ import numpy as np
 class PCA:
     def __init__(self, x: '[[],[], ...]'):
         self.x = x
-        self.Xcentered = self._center(x)
         self.m = len(x)
+
+        self.Xcentered = self._center(x)
         self.covmat = np.cov(x)
         self.eigenvalue, self.eigenvectors = np.linalg.eig(self.covmat)
-        self.eigenvectors = -self.eigenvectors[:,1]
 
     def _center(self, x: '[[],[], ...]') -> '[[], [], ...]':
         Xcentered = []
