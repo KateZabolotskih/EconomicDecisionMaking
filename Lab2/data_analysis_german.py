@@ -26,6 +26,7 @@ def get_percentages_of_significance(covmat: '[[], [], ...]') ->'[]':
     sum = 0
     res = []
     for i in range(col):
+        print(covmat[i][i])
         sum += covmat[i][i]
     for i in range(col):
         res.append(covmat[i][i]/sum * 100)
@@ -47,7 +48,7 @@ def get_sample_from_data(matrix, cols, n, marker, p, start_from = 0):
             col1_i += 1
     return sample
 
-m = 23
+m = 24
 signs = []
 for i in range(m):
     signs.append(i)
