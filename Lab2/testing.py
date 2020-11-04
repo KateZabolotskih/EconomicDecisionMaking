@@ -1,5 +1,4 @@
 import numpy as np
-import os
 from Lab2.principal_component_method import PCA
 from matplotlib import pyplot as plt
 from math import sqrt, fabs
@@ -68,8 +67,8 @@ def plot_3D(sample: '[[], [], []]'):
 #twodimensional
 mean = (0, 0)
 
-covmat_1 = [[10, 10],
-            [10, 10]]
+covmat_1 = [[10, 9],
+            [9, 10]]
 
 covmat_2 = [[10, 2],
             [2, 10]]
